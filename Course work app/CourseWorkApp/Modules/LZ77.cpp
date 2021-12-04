@@ -10,6 +10,7 @@ string ReadInitialFileToString(string filePath) {
     ifstream f(filePath);
     string out = "";
 
+    // Checking if file opened
     if (f) {
         char symbol;
         while (f.get(symbol)) {
@@ -27,7 +28,7 @@ string ReadPackedFileToString(string filePath, string &fileType) {
     string out = "";
 
     if (f) {
-        // getting type of initial file
+        // Getting type of initial file
         int fileTypeLen = f.get() - '0';
         for (int i = 0; i < fileTypeLen; i++) {
             fileType += static_cast<int>(f.get());
@@ -46,7 +47,6 @@ string ReadPackedFileToString(string filePath, string &fileType) {
 // Converting decimal to binary
 string DecToBin(int num) {
     string res = "";
-    // TODO: Check
     if (num == 0) {
         return "0";
     }
@@ -70,16 +70,19 @@ void ConvertBytesToTwoDecimals(int position, int lenght, int &posConv, int &lenC
 
     string res = pos_str + Len_str;
 
+    // Adding zeores
     while (res.size() != 16) {
         res = "0" + res;
     }
 
+    // Converting position
     pos_str = "";
     for (int i = 0; i < 8; i++) {
         pos_str += res[i];
     }
     posConv = stoi(pos_str, 0, 2);
 
+    // Converting length
     Len_str = "";
     for (int i = 8; i < 16; i++) {
         Len_str += res[i];
@@ -93,13 +96,16 @@ void ReconvertBytes(int postion, int lenght, int &reconvPos, int &reconvLen) {
     string pos_str = DecToBin(postion);
     string len_str = DecToBin(lenght);
 
+    // Extending lenght to 8 bits
     while (len_str.size() != 8) {
         len_str = "0" + len_str;
     }
+    // Extending position to 8 bits
     while (pos_str.size() != 8) {
         pos_str = "0" + pos_str;
     }
 
+    // Convetring position
     string res = pos_str + len_str;
     pos_str = "";
     for (int i = 0; i < 12; i++) {
@@ -107,6 +113,7 @@ void ReconvertBytes(int postion, int lenght, int &reconvPos, int &reconvLen) {
     }
     reconvPos = stoi(pos_str, 0, 2);
 
+    // Converting length
     len_str = "";
     for (int i = 12; i < 16; i++) {
         len_str += res[i];
@@ -115,11 +122,9 @@ void ReconvertBytes(int postion, int lenght, int &reconvPos, int &reconvLen) {
 
 }
 
-// TODO: fix packing end of file
-// TODO: fix the algorithm (finding the longest word)
-// packing file using LZ77 algorithm
+// Packing file using LZ77 algorithm
 void LZ77_pack(string olfFilePath, string newFilePath, string fileType) {
-    // tmp constants
+    // Constants
     // windowsSize - size of 12 bits  windowSize + maxCodeLen = 2 bytes
     // maxCodeLen - size of 4 bits (17-2)
     int windowSize = 4096;
@@ -127,7 +132,7 @@ void LZ77_pack(string olfFilePath, string newFilePath, string fileType) {
 
     ofstream out(newFilePath);
 
-    // writing to file type of initial file (first char is the size of fyle type then file type)
+    // Writing to file type of initial file (first char is the size of fyle type then file type)
     out << fileType.size();
     out << fileType;
 
@@ -144,9 +149,6 @@ void LZ77_pack(string olfFilePath, string newFilePath, string fileType) {
     // storing 8 bytes to write to the file
     vector<int> tmpCodeVector;
 
-    // TODO: Debug string delete
-    string tmpPackedStr;
-
     int cntOfStrAfterOverflowWindSize = 0;
     int pos = 0;
     int backToPos = 0;
@@ -157,7 +159,6 @@ void LZ77_pack(string olfFilePath, string newFilePath, string fileType) {
         // Finding the index of occurrence of strToOccurr in the tmpCodeStr
         if (strToOccurr.size() >= 4 && (tmpCodeStr.size() >= strToOccurr.size())) {
 
-            // TODO: check this part of code with i over winodowSize
             while (tmpCodeStr.find(strToOccurr) != string::npos && (int)strToOccurr.size() <= maxCodeLen &&
                     (int)tmpCodeStr.size() + (int)strToOccurr.size() < windowSize && i < codeStr.size()) {
                 pos = (int)tmpCodeStr.find(strToOccurr);
@@ -196,24 +197,19 @@ void LZ77_pack(string olfFilePath, string newFilePath, string fileType) {
             }
         }
 
-        // adding char to tmpCodeStr
-        if (((int)strToOccurr.size() == maxCodeLen) || (i == codeStr.size() - 1) ) {
+        // Adding char to tmpCodeStr
+        if (((int)strToOccurr.size() == maxCodeLen) || (i == codeStr.size() - 1)) {
             tmpCodeStr += strToOccurr[0];
 
-            int ConvertCharToInt = static_cast<int>(strToOccurr[0]);
-            if (ConvertCharToInt < 0) {
-                ConvertCharToInt += 256;
+            int convertCharToInt = static_cast<int>(strToOccurr[0]);
+            if (convertCharToInt < 0) {
+                convertCharToInt += 256;
             }
-            tmpCodeVector.push_back(ConvertCharToInt);
+            tmpCodeVector.push_back(convertCharToInt);
 
             byteStrToDefinePlacesOfCompression += "0";
-            if ((int)strToOccurr.size() == maxCodeLen) {
-                i = i - (strToOccurr.size() - 1);
-            }
-            else {
-                i = i - strToOccurr.size() + 1;
-            }
 
+            i = i - strToOccurr.size() + 1;
             strToOccurr = "";
         }
         // Cutting the string
@@ -228,10 +224,9 @@ void LZ77_pack(string olfFilePath, string newFilePath, string fileType) {
             tmpCodeVector.insert(tmpCodeVector.begin(), ConvertedBytesPosOfCompression);
             byteStrToDefinePlacesOfCompression = "";
 
-
+            // Writing packed code to file
             for (unsigned long j = 0; j < tmpCodeVector.size(); j++) {
                 out << static_cast<char>(tmpCodeVector[j]);
-                tmpPackedStr += static_cast<char>(tmpCodeVector[j]);
             }
             tmpCodeVector.clear();
             tmpCodeVector.shrink_to_fit();
@@ -255,7 +250,7 @@ void LZ77_unpack(string packedFilePath, string newFilePath) {
     string binaryPosOfCompression = "";
     string tmpText = "";
     int position = 0, length = 0;
-    // unpacking file
+    // Unpacking file
     for (unsigned long i = 0; i < packedCode.size(); i++) {
         posOfCompression = static_cast<int>(packedCode[i]);
         if (posOfCompression < 0) {
@@ -264,7 +259,7 @@ void LZ77_unpack(string packedFilePath, string newFilePath) {
         binaryPosOfCompression = DecToBin(posOfCompression);
 
         if (packedCode.size() - i >= 8) {
-            // extending binary number to 8 bits
+            // Extending binary number to 8 bits
             while (binaryPosOfCompression.size() != 8) {
                 binaryPosOfCompression = "0" + binaryPosOfCompression;
             }
@@ -284,6 +279,7 @@ void LZ77_unpack(string packedFilePath, string newFilePath) {
                 unpackedCode += packedCode[i];
             }
             else {
+                // Converting packed position lenght to initial format
                 position = static_cast<int>(packedCode[i]);
                 if (position < 0) {
                     position += 256;

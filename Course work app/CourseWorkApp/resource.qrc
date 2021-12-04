@@ -2,5 +2,6 @@
     <qresource prefix="/rec">
         <file>img/appIcon2.png</file>
         <file>img/appIcon.icns</file>
+        <file>Text/Info.txt</file>
     </qresource>
 </RCC>

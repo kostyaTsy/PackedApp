@@ -21,7 +21,7 @@ PackUnpackWindow::~PackUnpackWindow()
     delete ui;
 }
 
-// finding file type from initial file path
+// Finding file type from initial file path
 std::string findingFileType(std::string filePath) {
     std::string fileType = filePath;
     auto pos = fileType.find_last_of('.');
@@ -32,7 +32,7 @@ std::string findingFileType(std::string filePath) {
     return "";
 }
 
-// cutting the file type of the initial file
+// Cutting the file type of the initial file
 std::string cuttingFileType(std::string filePath) {
     std::string tmpStr = filePath;
     auto pos = tmpStr.find_last_of('/');
@@ -81,7 +81,7 @@ void PackUnpackWindow::on_btnAction_clicked()
     // Packing files
     if (ui->btnAction->text() == "Pack") {
         QString packAlorithm = ui->cbPackAlgo->currentText();
-        // using RLE alorithm
+        // Using RLE alorithm
         if (packAlorithm == "RLE") {
             int *arr = nullptr;
             long long sizeArr = 0;
@@ -92,11 +92,11 @@ void PackUnpackWindow::on_btnAction_clicked()
             delete [] arr;
 
         }
-        // using LZ77 algorithm
+        // Using LZ77 algorithm
         else if (packAlorithm == "LZ77") {
             LZ77_pack(this->filePath, this->savePath+".LZ77", fileType);
         }
-        // using Huffman algorithm
+        // Using Huffman algorithm
         else if (packAlorithm == "Huffman") {
             Huffman_pack(this->filePath, this->savePath+".Huff", fileType);
         }
@@ -108,7 +108,7 @@ void PackUnpackWindow::on_btnAction_clicked()
     }
     // Unpacking files
     else if (ui->btnAction->text() == "Unpack") {
-        // unpacking RLE file
+        // Unpacking RLE file
         if (fileType == "RLE") {
             long long arrSize = 0;
             std::string newFileType = "";
@@ -117,10 +117,11 @@ void PackUnpackWindow::on_btnAction_clicked()
             RLE_unpack(arr, arrSize, this->savePath+newFileType);
             delete [] arr;
         }
-        // unpacking LZ77 file
+        // Unpacking LZ77 file
         else if (fileType == "LZ77") {
             LZ77_unpack(this->filePath, this->savePath);
         }
+        // Unpacking Huff file
         else if (fileType == "Huff") {
             Huffman_unpack(this->filePath, this->savePath);
         }

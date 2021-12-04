@@ -29,7 +29,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    // variable of class QFileSystemModel to create a file system
+    // Field of class QFileSystemModel to create a file system
     QFileSystemModel *model;
 };
 #endif // MAINWINDOW_H

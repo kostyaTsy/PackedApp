@@ -63,13 +63,13 @@ QChartView* CreateBarChart(QBarSeries *series, QStringList categories, QString t
     series->attachAxis(axisY);
 
 
-    // bottom text (describe each color)
+    // Bottom text (describe each color)
     chart->legend()->setVisible(true);
     chart->legend()->setAlignment(Qt::AlignBottom);
 
     // Creating chart view of chart and set the theme of the chart
     QChartView *chartView = new QChartView(chart);
-    chartView->chart()->setTheme(QChart::ChartThemeBlueCerulean);
+    chartView->chart()->setTheme(QChart::ChartThemeLight);
 
     chartView->setRenderHint(QPainter::Antialiasing);
 

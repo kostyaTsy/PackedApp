@@ -16,10 +16,6 @@ struct Node {
     Node *left, *right;
 };
 
-struct Tree {
-    Node *head;
-};
-
 // Type of queue
 struct Queue {
     Node *front, *rear;
@@ -31,6 +27,7 @@ Queue* InsertToQueue(Queue *queue, Node *node);
 Queue* InitializeQueue(Queue *queue);
 Node* BuildTree(Node *leftData, Node *rightData);
 void TreeTraversal(Node *tree, unordered_map<char, string> &codeMap, string codeStr, char symb);
+void FreeTree(Node *tree);
 
 
 #endif // PRIORITYQUEUEANDTREE_H

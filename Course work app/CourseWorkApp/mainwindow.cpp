@@ -63,6 +63,7 @@ void MainWindow::on_btnPack_clicked()
     packUnpackWin->show();
 }
 
+// Action on menu Info clicked
 void MainWindow::on_actionInfo_triggered()
 {
     HelpWindow *helpWindow = new HelpWindow;
@@ -71,7 +72,7 @@ void MainWindow::on_actionInfo_triggered()
     helpWindow->show();
 }
 
-
+// Action on menu App clicked
 void MainWindow::on_actionApp_triggered()
 {
     HelpWindow *helpWindow = new HelpWindow;
@@ -80,7 +81,7 @@ void MainWindow::on_actionApp_triggered()
     helpWindow->show();
 }
 
-
+// Action on menu Statistics cliked
 void MainWindow::on_actionStatistics_triggered()
 {
     StatisticsWindow *stWindow = new StatisticsWindow;

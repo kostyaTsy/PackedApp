@@ -637,6 +637,7 @@ compiler_rcc_clean:
 	-$(DEL_FILE) qrc_resource.cpp
 qrc_resource.cpp: ../CourseWorkApp/resource.qrc \
 		../../../6.2.1/macos/libexec/rcc \
+		../CourseWorkApp/Text/Info.txt \
 		../CourseWorkApp/img/appIcon2.png \
 		../CourseWorkApp/img/appIcon.icns
 	/Users/kostyatsyvilko/Qt/6.2.1/macos/libexec/rcc -name resource ../CourseWorkApp/resource.qrc -o qrc_resource.cpp

@@ -19,7 +19,7 @@ Node* FillNode(char symbol, int freq) {
     return node;
 }
 
-// getting item from the queue
+// Getting item from the queue
 Node* GetItem(Queue *queue) {
     Node *node = queue->front;
 
@@ -36,6 +36,7 @@ Node* GetItem(Queue *queue) {
     return node;
 }
 
+// Initialization of Queue
 Queue* InitializeQueue(Queue *queue) {
     queue = new Queue;
     queue->front = nullptr;
@@ -62,7 +63,6 @@ Queue* InsertToQueue(Queue *queue, Node *node) {
     // Inserting to the queue according to the priority
     else {
         tmpNode = queue->front;
-        // TODO: change "node->freq > tmpNode->freq" sign to >= to adding el to queue and > to adding tree node
         while (tmpNode->next != nullptr && node->freq > tmpNode->freq) {
             tmpNode = tmpNode->next;
         }
@@ -80,7 +80,6 @@ Queue* InsertToQueue(Queue *queue, Node *node) {
             tmpNode->prev = node;
             queue->front = node;
         }
-        // TODO: check
         // Insertion to the queue to the position from the beginning to the end
         else {
             node->prev = tmpNode->prev;
@@ -91,11 +90,10 @@ Queue* InsertToQueue(Queue *queue, Node *node) {
 
     }
 
-
     return queue;
 }
 
-// Reinitialize node
+// Reinitialization of node
 Node* ReInitNode(Node *leftData) {
     leftData -> next = nullptr;
     leftData -> prev = nullptr;
@@ -104,10 +102,11 @@ Node* ReInitNode(Node *leftData) {
 }
 
 
-// building the tree
+// Building the tree
 Node* BuildTree(Node *leftData, Node *rightData) {
     Node *treeNode = new Node;
     treeNode -> symbol = '\0';
+    // Calculating frequnecy
     treeNode -> freq = leftData -> freq + rightData -> freq;
 
     ReInitNode(treeNode);
@@ -120,7 +119,7 @@ Node* BuildTree(Node *leftData, Node *rightData) {
     return treeNode;
 }
 
-// recursion tree traversal to define code of each symbol in tree and write to hash map
+// Recursion tree traversal to define code of each symbol in tree and write to hash map
 // map char - string (string is binary code of char in the tree)
 void TreeTraversal(Node *tree, unordered_map<char, string> &codeMap, string codeStr, char symb) {
     if (tree == nullptr) {
@@ -137,4 +136,13 @@ void TreeTraversal(Node *tree, unordered_map<char, string> &codeMap, string code
         TreeTraversal(tree->right, codeMap, codeStr+"1", symb);
     }
 
+}
+
+// Cleaning memmory of tree
+void FreeTree(Node *tree) {
+    if (tree != nullptr) {
+        FreeTree(tree->left);
+        FreeTree(tree->right);
+        free(tree);
+    }
 }

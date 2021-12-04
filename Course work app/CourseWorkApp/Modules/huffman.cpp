@@ -4,8 +4,6 @@
 #include <fstream>
 #include <unordered_map>
 #include "PriorityQueueAndTree.h"
-
-//TODO: Delete
 #include <iostream>
 
 using namespace std;
@@ -25,12 +23,13 @@ string DecToBinCode(int num) {
 
 }
 
-// reading the initial file and calculating frequency of chars from file
+// Reading the initial file and calculating frequency of chars from file
 vector<char> ReadInitialFile(string filePath) {
     ifstream f(filePath);
 
     vector<char> InCode;
 
+    // Checking if file opened
     if (f) {
         char symbol;
         while (f.get(symbol)) {
@@ -50,45 +49,44 @@ string ReadPackedFile(string filePath, string &fileType, unordered_map<string, c
     string binaryCodeFile = "";
 
     if (f) {
-        // finding the length of the file
+        // Finding the length of file
         f.seekg(0, ios::end);
         long long size = f.tellg();
         f.seekg(0);
 
         long long tmpSize = 1;
 
-        // getting type of initial file
+        // Getting type of initial file
         int fileTypeLen = f.get() - '0';
         for (int i = 0; i < fileTypeLen; i++) {
             fileType += static_cast<int>(f.get());
             tmpSize++;
         }
 
-        // getting huffmanTable
+        // Getting huffmanTable
         int sizeOfTable = f.get() + 1;
         tmpSize++;
         if (sizeOfTable < 0) sizeOfTable += 256;
 
         string codeOfSymbol = "";
-        char el; // value in map
+        char el; // Value in map
         for (int i = 0; i < sizeOfTable; i++) {
             el = f.get();
             getline(f, codeOfSymbol);
             haffmanTable[codeOfSymbol] = el;
-            // +1 - /n +1 f.get()
+            // +1 - /n +1 f.get() type of record from file
             tmpSize += codeOfSymbol.size() + 2;
         }
 
 
-        // count of zeros of the last element
+        // Count of zeros of the last element
         int numOfZero = 0;
         string tmpCode = "";
         char symbol;
-        // getting packed code from file
+        // Getting packed code from file
         while (f.get(symbol)) {
 
-            // finding zeros of the last element
-            // TODO: think about this part
+            // Finding zeros of the last element
             if (tmpSize == (size - 2)) {
                 numOfZero = static_cast<int>(symbol);
                 f.get(symbol);
@@ -96,7 +94,7 @@ string ReadPackedFile(string filePath, string &fileType, unordered_map<string, c
                 int newNum = static_cast<int>(symbol);
                 if (newNum < 0) newNum += 256;
                 tmpCode = DecToBinCode(newNum);
-                // Adding 0
+                // Adding zeroes
                 for (int i = 0; i < numOfZero; i++) {
                     tmpCode = "0" + tmpCode;
                 }
@@ -124,41 +122,6 @@ string ReadPackedFile(string filePath, string &fileType, unordered_map<string, c
     f.close();
     return binaryCodeFile;
 }
-
-// Reading haffman table from the text file
-// unordered_map string - char, to finding char by its code
-//TODO: upgrade algorithm
-//unordered_map<string, char> ReadHuffmanTable(string filePath) {
-//    unordered_map<string, char> haffmanTable;
-
-//    ifstream keyFile(filePath);
-
-//    if (keyFile) {
-//        string codeOfSymbol = "";
-//        char el; // value in map
-//        char symbol;
-//        while (keyFile.get(symbol)) {
-//            el = symbol;
-//            getline(keyFile, codeOfSymbol);
-//            haffmanTable[codeOfSymbol] = el;
-//        }
-//    }
-
-//    return haffmanTable;
-//}
-
-// Writing haffman table to the file
-// File format s|c, s - symbol, c - code
-//void WriteHuffmanTableToFile(ofstream codeFile, unordered_map<char, string> haffmanTable) {
-    //ofstream codeFile(filePath);
-
-//    for (auto el: haffmanTable) {
-//        codeFile << el.first;
-//        codeFile << el.second;
-//        codeFile << "\n";
-//    }
-
-//}
 
 // Writing packed code to file with initial file type
 void WritePackedCodeToFile(string filePath, string packedCode, unordered_map<char, string> haffmanTable, string fileType) {
@@ -216,16 +179,16 @@ void Huffman_pack(string oldFilePath, string newFilePath, string fileType) {
 
     fileCode = ReadInitialFile(oldFilePath);
 
-    // filling map of frequency of symbols
+    // Filling map of frequency of symbols
     for (unsigned long i = 0; i < fileCode.size(); i++) {
         freqOfChar[fileCode[i]]++;
     }
 
-    // TODO: Delete Queue and all element in queue
+    // Initialize freqQueue
     Queue *freqQueue = nullptr;
     freqQueue = InitializeQueue(freqQueue);
 
-    // filling priority queue
+    // Filling priority queue
     unordered_map<char, int>::iterator it;
     for (it = freqOfChar.begin(); it != freqOfChar.end(); it++) {
         Node *node = FillNode(it->first, it->second);
@@ -238,23 +201,24 @@ void Huffman_pack(string oldFilePath, string newFilePath, string fileType) {
         InsertToQueue(freqQueue, tmpTreeNode);
     }
 
-    // traversal the tree to generating codes of each symbol
-    // building Haffman table
+    // Traversal the tree to generating codes of each symbol
+    // Building Haffman table
     unordered_map<char, string> haffmanTable;
     TreeTraversal(freqQueue->front, haffmanTable, "", '\0');
 
     string genStrCode = GenOutPackedCode(fileCode, haffmanTable);
 
-    //WriteHuffmanTableToFile("HaffmanKey.txt", haffmanTable);
+    // Writing packed code to file of typeFile type
     WritePackedCodeToFile(newFilePath, genStrCode, haffmanTable, fileType);
 
+    // Cleaning the memory of queue and tree
+    FreeTree(freqQueue->front);
+    free(freqQueue);
 }
 
 // Unpacking file with haffman algorithm
 void Huffman_unpack(string packedFilePath, string unpackedFilePath) {
     unordered_map<string, char> haffmanTable;
-
-    //haffmanTable = ReadHuffmanTable("HaffmanKey.txt");
 
     string fileType = "";
     string packedCode = ReadPackedFile(packedFilePath, fileType, haffmanTable);

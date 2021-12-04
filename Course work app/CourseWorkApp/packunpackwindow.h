@@ -16,15 +16,14 @@ class PackUnpackWindow : public QWidget
 public:
     explicit PackUnpackWindow(QWidget *parent = nullptr);
     ~PackUnpackWindow();
+    // Fieldes of save path and path to initial file
     std::string filePath;
     std::string savePath;
     bool IsPack;
 
 private slots:
     void on_PackUnpackWindow_windowTitleChanged(const QString &title);
-
     void on_btnAction_clicked();
-
     void on_btnChoosePath_clicked();
 
 private:

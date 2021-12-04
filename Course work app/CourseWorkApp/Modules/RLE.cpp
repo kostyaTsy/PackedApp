@@ -15,7 +15,7 @@ void FillVector(vector<int> tmpVector, vector<int>& fillVector) {
 // Converting T|P bytes in one packed number
 vector<int> ConvertBytesToNum(vector<int> tmpPackedCode) {
 
-    // Res vector of converted bytes to number
+    // res vector of converted bytes to number
     vector<int> res;
 
     int ConvNum = 0;
@@ -45,7 +45,7 @@ vector<int> ConvertBytesToNum(vector<int> tmpPackedCode) {
 // Writing packed code to the file
 void WritePackedCodeToFile(string filePath, string fileType, vector<int> code) {
     ofstream out(filePath);
-    // writing data of format to file (size|format  ->  5txt)
+    // Writing data of format to file (size|format  ->  5txt)
     out << fileType.size();
     out << fileType;
 
@@ -80,15 +80,15 @@ void RLE_pack(int arrCodes[], long long arrSize, string filePath, string fileTyp
 
     int IsRepeated = 0;
     for (int i = 0; i < arrSize-1;) {
-        // finding repeated elements
+        // Finding repeated elements
         while (arrCodes[i] == arrCodes[i+1] && i < arrSize - 1 && tmpCodes.size() < (unsigned long)MAXSIZE) {
             tmpCodes.push_back(arrCodes[i]);
             IsRepeated = 1;
             i++;
         }
-        // filling Vector with repeated elements
+        // Filling Vector with repeated elements
         if (IsRepeated == 1) {
-            // pushing (repeat/not)|(number of repeat - 2/number of el-1)
+            // Pushing (repeat/not)|(number of repeat - 2/number of el-1)
             tmpPackedCode.push_back(IsRepeated);
             tmpPackedCode.push_back((int)tmpCodes.size()-1);
 
@@ -99,13 +99,13 @@ void RLE_pack(int arrCodes[], long long arrSize, string filePath, string fileTyp
             tmpCodes.shrink_to_fit();
         }
 
-        // finding not repeated elemnts
+        // Finding not repeated elemnts
         while (arrCodes[i] != arrCodes[i+1] && i < arrSize - 1 && tmpCodes.size() < (unsigned long)MAXSIZE) {
             tmpCodes.push_back(arrCodes[i]);
             IsRepeated = 0;
             i++;
         }
-        // filling vector with not repeated elements
+        // Filling vector with not repeated elements
         if (IsRepeated == 0 || i == arrSize-1) {
             if (i == arrSize - 1) {
                 IsRepeated = 0;

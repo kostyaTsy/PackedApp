@@ -4,6 +4,7 @@
 #include "QFile"
 
 #include <fstream>
+#include <iostream>
 
 HelpWindow::HelpWindow(QWidget *parent) :
     QWidget(parent),
@@ -23,6 +24,7 @@ QString ReadTextFile(QString filePath) {
 
         return text;
     }
+    f.close();
 
     return "";
 
@@ -35,8 +37,11 @@ HelpWindow::~HelpWindow()
 
 void HelpWindow::on_HelpWindow_windowTitleChanged(const QString &title)
 {
+    // Getting acces to text file from resource file
+    QString pathToFile = ":/rec/Text/Info.txt";
     if (title == "Info") {
-        ui->textEdit->setText(ReadTextFile("Info.txt"));
+        ui->textEdit->setText(ReadTextFile(pathToFile));
+        //ui->textEdit->setText(textStr);
         this->setFixedSize(500, 400);
         this->setMaximumSize(2000, 2000);
     }

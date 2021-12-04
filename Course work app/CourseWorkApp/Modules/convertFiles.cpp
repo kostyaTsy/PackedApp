@@ -8,18 +8,18 @@ int* ConvertFileToCode(string filePath, long long &size) {
     size = 0;
     int *arr = nullptr;
 
-    // checking is file opened
+    // Checking if file opened
     if (f) {
         // finding the length of the file
         f.seekg(0, ios::end);
         size = f.tellg();
         f.seekg(0);
 
-        // locating array
+        // Locating array
         arr = new int[size];
         int cntOfArr = 0;
 
-        // writing symbols from the file to array
+        // Writing symbols from the file to array
         char symbol;
         int code = 0;
         while (f.get(symbol)) {
@@ -43,14 +43,14 @@ int* ConvertPackedFile(string filePath, long long &size, string &fileType) {
     int *arr = nullptr;
 
     fileType = ".";
-    // checking is file opened
+    // Checking if file opened
     if (f) {
-        // finding the length of the file
+        // Finding the length of the file
         f.seekg(0, ios::end);
         size = f.tellg();
         f.seekg(0);
 
-        // finding file type
+        // Finding file type
         int sizeFileType = f.get() - '0';
         for (int i = 0; i < sizeFileType; i++) {
             fileType += static_cast<int>(f.get());
@@ -58,11 +58,11 @@ int* ConvertPackedFile(string filePath, long long &size, string &fileType) {
 
         size = size - (sizeFileType + 1);
 
-        // locating array
+        // Locating array
         arr = new int[size];
         int cntOfArr = 0;
 
-        // writing symbols from the file to array
+        // Writing symbols from the file to array
         char symbol;
         int code = 0;
         while (f.get(symbol)) {
@@ -84,6 +84,7 @@ string FindingFileType(string path) {
 
     ifstream f(path);
 
+    // Checking if file opened
     if (f) {
         int fileTypeLen = f.get() - '0';
         for (int i = 0; i < fileTypeLen; i++) {
